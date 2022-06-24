@@ -1,6 +1,6 @@
 package entity;
 
-public class KeyHolder {
+public class APIAccessDetails {
 
     // ========================================================================================
     // Fields

@@ -1,4 +1,10 @@
-
+/**
+ * Part of MegaventoryApplication
+ * Created by: @Author V
+ * Date: @Date 24-Jun-22
+ * Time: 11:31
+ * =============================================================
+ **/
 
 package entity;
 
@@ -6,27 +12,31 @@ import lombok.Data;
 import org.json.JSONObject;
 
 @Data
-public class Discount implements JSONableEntity {
+public class SaleOrderDetails implements JSONableEntity {
 
     // ========================================================================================
     // Fields
     // ========================================================================================
 
-    private String name;
-    private String description;
-    private double value;
+    private String productSKU;
+    private int productQuantity;
+    private int taxID;
+    private int discountID;
+
 
     // ========================================================================================
     // Constructors
     // ========================================================================================
 
-    public Discount(String name, String description, double value) {
-        this.name = name;
-        this.description = description;
-        this.value = value;
+
+    public SaleOrderDetails(String productSKU, int productQuantity, int taxID, int discountID) {
+        this.productSKU = productSKU;
+        this.productQuantity = productQuantity;
+        this.taxID = taxID;
+        this.discountID = discountID;
     }
 
-    public Discount() {
+    public SaleOrderDetails() {
     }
 
     // ========================================================================================
@@ -39,23 +49,20 @@ public class Discount implements JSONableEntity {
     // Methods
     // ========================================================================================
 
+    @Override
     public JSONObject toJSON(String mvRecordAction) {
-        JSONObject mvDiscount = createJSONObjectFromThis();
-
-        JSONObject container = new JSONObject();
-        container.put("mvRecordAction", mvRecordAction);
-        container.put("mvDiscount", mvDiscount);
-
-        return container;
+        return  createJSONObjectFromThis();
     }
 
     private JSONObject createJSONObjectFromThis() {
-        JSONObject mvDiscount = new JSONObject();
+        JSONObject saleDetails = new JSONObject();
 
-        mvDiscount.put("DiscountName", this.getName());
-        mvDiscount.put("DiscountDescription", this.getDescription());
-        mvDiscount.put("DiscountValue", this.getValue());
-        return mvDiscount;
+        saleDetails.put("SalesOrderRowProductSKU", getProductSKU());
+        saleDetails.put("SalesOrderRowQuantity", String.valueOf(getProductQuantity()));
+        saleDetails.put("SalesOrderRowTaxID", String.valueOf(getTaxID()));
+        saleDetails.put("SalesOrderRowDiscountID", String.valueOf(getDiscountID()));
+
+        return saleDetails;
     }
 
 }

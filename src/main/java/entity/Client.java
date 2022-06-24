@@ -5,7 +5,7 @@ import lombok.Data;
 import org.json.JSONObject;
 
 @Data
-public class Client implements Item  {
+public class Client implements JSONableEntity {
 
     // ========================================================================================
     // Fields
@@ -41,24 +41,23 @@ public class Client implements Item  {
     // ========================================================================================
 
     public JSONObject toJSON(String mvRecordAction) {
-        //      creating the json object
-        JSONObject json = new JSONObject();
+        JSONObject mvSupplierClient = createJSONObjectFromThis();
 
-//        Insert action
-        json.put("mvRecordAction", mvRecordAction);
+        JSONObject container = new JSONObject();
+        container.put("mvSupplierClient", mvSupplierClient);
+        container.put("mvRecordAction", mvRecordAction);
 
-//        creating the product details
+        return container;
+    }
+
+    private JSONObject createJSONObjectFromThis() {
         JSONObject mvSupplierClient = new JSONObject();
 
         mvSupplierClient.put("SupplierClientName", this.getName());
         mvSupplierClient.put("SupplierClientEmail", this.getEmail());
         mvSupplierClient.put("SupplierClientShippingAddress1", this.getShippingAddress());
         mvSupplierClient.put("SupplierClientPhone1", this.getPhone());
-
-//        add product details to final json
-        json.put("mvSupplierClient", mvSupplierClient);
-
-        return json;
+        return mvSupplierClient;
     }
 
 }

@@ -1,8 +1,8 @@
 
 package service;
 
-import entity.KeyHolder;
-import entity.Item;
+import entity.APIAccessDetails;
+import entity.JSONableEntity;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class RestService {
+public class MegaventoryRestApiClient {
 
 
     // ========================================================================================
@@ -19,23 +19,23 @@ public class RestService {
 
     // ------------------------ Public methods -------------------------
 
-    public void insertItem(String endpoint, Item item) {
+    public void insertEntity(String endpoint, JSONableEntity entity) {
 
-        makePostRequest(endpoint, item, "Insert");
+        makePostRequest(endpoint, entity, "Insert");
 
     }
 
-    public void updateItem(String endpoint, Item item) {
-        makePostRequest(endpoint, item, "Update");
+    public void updateItem(String endpoint, JSONableEntity entity) {
+        makePostRequest(endpoint, entity, "Update");
     }
 
     // ------------------------ Private methods ------------------------
 
-    private void makePostRequest(String query, Item item, String mvRecordAction) {
+    private void makePostRequest(String query, JSONableEntity entity, String mvRecordAction) {
         try {
             HttpURLConnection connection = getPostConnectionToResources(query);
 
-            JSONObject body = getBody(item, mvRecordAction);
+            JSONObject body = getBody(entity, mvRecordAction);
 
             setBodyForPostRequest(connection, body);
 
@@ -54,9 +54,9 @@ public class RestService {
         }
     }
 
-    private JSONObject getBody(Item item, String mvRecordAction) {
-        JSONObject body = item.toJSON(mvRecordAction);
-        body.put("APIKEY", KeyHolder.key);
+    private JSONObject getBody(JSONableEntity entity, String mvRecordAction) {
+        JSONObject body = entity.toJSON(mvRecordAction);
+        body.put("APIKEY", APIAccessDetails.key);
         return body;
     }
 
@@ -79,7 +79,7 @@ public class RestService {
     }
 
     private HttpURLConnection getPostConnectionToResources(String query) throws IOException {
-        URL url = new URL(KeyHolder.resource + query);
+        URL url = new URL(APIAccessDetails.resource + query);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
@@ -89,7 +89,7 @@ public class RestService {
         return connection;
     }
 
-    // todo: refactor xd
+    // todo: refactor
     private StringBuffer readData(InputStream inputStream) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
